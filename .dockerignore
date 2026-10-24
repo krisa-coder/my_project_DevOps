@@ -1,0 +1,16 @@
+# Version control and project notes
+.git
+.gitignore
+meme_stash.md
+
+# Local development and editor files
+.vscode
+.idea
+*.log
+
+# Dependency and environment artifacts
+node_modules
+.env
+.env.*
+!.env.example
+__pycache__
