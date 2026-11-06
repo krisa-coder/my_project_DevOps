@@ -7,14 +7,11 @@ export async function initAuth() {
     updateAuthUI();
 }
 
-export function getUser() {
-    return currentUser;
-}
+export function getUser() { return currentUser; }
 
 export async function login(username, password) {
     currentUser = await api.login(username, password);
-    updateAuthUI();
-    return currentUser;
+    updateAuthUI(); return currentUser;
 }
 
 export async function register(username, password) {
