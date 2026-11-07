@@ -113,6 +113,13 @@ body {
 .action-btn:hover { color: #ff6b6b; }
 .action-btn.liked { color: #ff6b6b; }
 
+/* Цвета для новых кнопок */
+.edit-btn { color: #4dabf7 !important; }
+.edit-btn:hover { color: #339af0 !important; }
+
+.delete-btn { color: #ff6b6b !important; }
+.delete-btn:hover { color: #fa5252 !important; }
+
 /* Модальное окно */
 .modal {
     position: fixed;
@@ -131,7 +138,7 @@ body {
     width: 90%;
     max-width: 400px;
 }
-.modal-content input {
+.modal-content input, .modal-content textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;

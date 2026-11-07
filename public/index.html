@@ -29,6 +29,7 @@
         <section class="feed" id="feed"></section>
     </main>
 
+    <!-- Модальное окно авторизации -->
     <div id="authModal" class="modal hidden">
         <div class="modal-content">
             <h3 id="authTitle">Вход</h3>
@@ -39,6 +40,23 @@
                     <button type="submit" class="btn">OK</button>
                     <button type="button" id="toggleAuthMode" class="btn btn-secondary">Регистрация</button>
                     <button type="button" id="closeModal" class="btn btn-secondary">Закрыть</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования мема -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Редактировать мем</h3>
+            <form id="editForm">
+                <input type="hidden" id="editMemeId">
+                <input type="text" id="editMemeTitle" placeholder="Название мема" required>
+                <input type="url" id="editMemeImage" placeholder="URL картинки" required>
+                <textarea id="editMemeCaption" placeholder="Подпись" rows="2"></textarea>
+                <div class="modal-actions">
+                    <button type="submit" class="btn">Сохранить</button>
+                    <button type="button" id="closeEditModal" class="btn btn-secondary">Отмена</button>
                 </div>
             </form>
         </div>

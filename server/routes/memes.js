@@ -109,4 +109,61 @@ router.post('/:id/like', authMiddleware, async (req, res) => {
     }
 });
 
+// Обновить мем
+router.put('/:id', authMiddleware, async (req, res) => {
+    try {
+        const memeId = parseInt(req.params.id);
+        const { title, imageUrl, caption } = req.body;
+
+        // Проверяем, что мем существует и принадлежит пользователю
+        const meme = await pool.query(
+            'SELECT * FROM memes WHERE id = $1 AND author_id = $2',
+            [memeId, req.user.id]
+        );
+        if (meme.rows.length === 0) {
+            return res.status(404).json({ error: 'Мем не найден или нет прав' });
+        }
+
+        const result = await pool.query(
+            `UPDATE memes 
+             SET title = COALESCE($1, title), 
+                 image_url = COALESCE($2, image_url), 
+                 caption = COALESCE($3, caption)
+             WHERE id = $4
+             RETURNING id, title, image_url AS "imageUrl", caption, created_at AS "createdAt"`,
+            [title, imageUrl, caption, memeId]
+        );
+
+        res.json({
+            ...result.rows[0],
+            author: req.user.username,
+            authorId: req.user.id
+        });
+    } catch (err) {
+        console.error('❌ Ошибка обновления:', err);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
+// Удалить мем
+router.delete('/:id', authMiddleware, async (req, res) => {
+    try {
+        const memeId = parseInt(req.params.id);
+
+        const result = await pool.query(
+            'DELETE FROM memes WHERE id = $1 AND author_id = $2 RETURNING id',
+            [memeId, req.user.id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Мем не найден или нет прав' });
+        }
+
+        res.json({ message: 'Мем удалён' });
+    } catch (err) {
+        console.error('❌ Ошибка удаления:', err);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
 export default router;

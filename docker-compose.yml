@@ -1,0 +1,51 @@
+services:
+  api:
+    build: ./server
+    container_name: memehub-api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./public:/public:ro
+    environment:
+      PORT: "3000"
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: memehub
+      DB_USER: postgres
+      DB_PASSWORD: postgres123
+      JWT_SECRET: super-secret-key-docker
+      FRONTEND_URL: http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - memehub-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    container_name: memehub-db
+    environment:
+      POSTGRES_DB: memehub
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./server/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d memehub"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - memehub-network
+    restart: unless-stopped
+
+volumes:
+  db_data:
+
+networks:
+  memehub-network:
+    driver: bridge
